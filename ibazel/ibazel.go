@@ -420,6 +420,7 @@ func (i *IBazel) getInfo() (*map[string]string, error) {
 	b := i.newBazel()
 
 	res, err := b.Info()
+
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error getting Bazel info %v\n", err)
 		return nil, err
@@ -491,6 +492,10 @@ func (i *IBazel) watchFiles(query string, watcher *fsnotify.Watcher) {
 				fmt.Fprintf(os.Stderr, "Error unwatching file %v\nError: %v\n", line, err)
 			}
 		}
+	}
+
+	if len(filesAdded) == 0 {
+		fmt.Fprintf(os.Stderr, "Didn't find any files to watch from query %s\n", query)
 	}
 
 	i.filesWatched[watcher] = filesAdded
